@@ -7,7 +7,7 @@
       "type": "git",
       "url": "https://github.com/adamczuk-piotr/AP-Buttons.git"
     },
-    "version": "0.1.0",
+    "version": "0.2.0",
     "frameworks": "arduino",
     "platforms": "*"
   }

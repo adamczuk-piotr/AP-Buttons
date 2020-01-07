@@ -1,25 +1,22 @@
 #include "PushButton.h"
 #include <Arduino.h>
 
+uint16_t 	PushButton::ClickMinTime = 50;
+uint16_t 	PushButton::ClickMaxTime = 200;
+uint16_t 	PushButton::DoubleClickWaitTime = 220;
+uint16_t 	PushButton::PressMinTime = 400;		
+uint16_t 	PushButton::HoldMinTime = 800;
+
 void PushButton::begin() {
 	pinMode(_pin, INPUT_PULLUP);
-	delay(50);
 	//Set state to HIGH to turn off on sturtup
 	_lastState = HIGH;
-	_lastChanged = millis();
-	_lastClick = millis();
-	_clicked = false;
-	_pressed = false;
+
 };
 
 ButtonEvent PushButton::getEvent() {
-	unsigned long cState;
-	if (_digital) {
-		cState = digitalRead(_pin); //Read current state
-	}
-	else {
-		cState = (analogRead(_pin) > 150) ? true : false;
-	}
+	bool cState = digitalRead(_pin); //Read current state
+
     unsigned long cTime = millis();	//Current time
 	unsigned long waitTime = (cTime - _lastChanged);//Calculate wait time
 	ButtonEvent event = ButtonEvent::None;
@@ -33,8 +30,14 @@ ButtonEvent PushButton::getEvent() {
 						_clicked = false;
 					}
 					else {
-						_clicked = true;
-						_lastClick = cTime;
+						if (nullptr == _onDoubleClick) {
+							event = ButtonEvent::Clicked; //Return Click event immediatelly if no double click is registered
+						}
+						else {
+							_clicked = true; //store click event and time
+							_lastClick = cTime;	
+						}
+
 					}
 				}
 				else if (_pressed) {
@@ -72,25 +75,24 @@ ButtonEvent PushButton::getEvent() {
 void PushButton::update() {
 	const ButtonEvent  e = getEvent();
 
-	switch (e)
-	{
+	switch (e) {
 	case ButtonEvent::Clicked:
-		if (_onClick != NULL) {
+		if (_onClick != nullptr) {
 			_onClick();
 		}
 		break;
 	case ButtonEvent::DoubleClicked:
-		if (_onDoubleClick != NULL) {
+		if (_onDoubleClick != nullptr) {
 			_onDoubleClick();
 		}
 		break;
 	case ButtonEvent::Pressed:
-		if (_onPress != NULL) {
+		if (_onPress != nullptr) {
 			_onPress();
 		}
 		break;
 	case ButtonEvent::Hold:
-		if (_onHold != NULL) {
+		if (_onHold != nullptr) {
 			_onHold();
 		}
 		break;

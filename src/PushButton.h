@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <Button.h>
 
-class PushButton : public Button{
+class PushButton : public Button {
 	private:
 		uint8_t _pin;
 		
@@ -13,26 +13,23 @@ class PushButton : public Button{
 		unsigned long _lastChanged;
 		unsigned long _lastClick;
 
-		ButtonEventCallback _onClick = NULL;
-		ButtonEventCallback _onDoubleClick = NULL;
-		ButtonEventCallback _onPress = NULL;
-		ButtonEventCallback _onHold = NULL;
+		ButtonEventCallback _onClick = nullptr;
+		ButtonEventCallback _onDoubleClick = nullptr;
+		ButtonEventCallback _onPress = nullptr;
+		ButtonEventCallback _onHold = nullptr;
 
 	protected:
-		bool _digital = true;
-		
-	public:
-		static const uint16_t 		ClickMinTime = 50;
-		static const uint16_t 		ClickMaxTime = 200;
-		static const uint16_t 		DoubleClickWaitTime = 220;
-		static const uint16_t 		PressMinTime = 400;		
-		static const uint16_t 		HoldMinTime = 800;
-		
-		PushButton() : Button() {};
-		PushButton(uint8_t pin) : Button(), _pin(pin){};
-		~PushButton() {};
-
 		ButtonEvent getEvent();
+
+	public:
+		static  uint16_t	ClickMinTime;
+		static  uint16_t 	ClickMaxTime;
+		static  uint16_t 	DoubleClickWaitTime;
+		static  uint16_t 	PressMinTime;		
+		static  uint16_t 	HoldMinTime;
+		
+		PushButton(uint8_t pin) : Button(), _pin(pin), _clicked(false), _pressed(false), _lastChanged(0), _lastClick(0) {};
+		~PushButton() {};
 
 		void  begin();
 
