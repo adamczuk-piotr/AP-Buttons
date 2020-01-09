@@ -1,13 +1,12 @@
 {
-    "name": "AP Buttons",
-    "keywords": "Button Tact Push Latch Click",
-    "description": "Library for common button types used with arduino and esp MCUs",
-    "repository":
-    {
-      "type": "git",
-      "url": "https://github.com/adamczuk-piotr/AP-Buttons.git"
-    },
-    "version": "0.2.0",
-    "frameworks": "arduino",
-    "platforms": "*"
-  }
+  "name": "AP-Buttons",
+  "keywords": "button,clck,tact,push,latch",
+  "description": "Library for common button types used with arduino and esp MCUs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamczuk-piotr/AP-Buttons.git"
+  },
+  "version": "0.3.0",
+  "frameworks": "arduino",
+  "platforms": "*"
+}
