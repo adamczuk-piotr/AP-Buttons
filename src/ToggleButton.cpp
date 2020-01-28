@@ -4,7 +4,6 @@
 uint16_t ToggleButton::ChangeTime = 50;
 uint16_t ToggleButton::BackOnTime = 500;
 
-
 void ToggleButton::begin() {
     pinMode(_pin, INPUT_PULLUP);
 	_state = digitalRead(_pin);
@@ -18,10 +17,8 @@ ButtonEvent ToggleButton::getEvent() {
 	unsigned long waitTime = (cTime - _changeTime);//Calculate wait time
 	
 	if ((_state != cState) && (waitTime > ChangeTime) ) {	
-		
         _changeTime = cTime;
 		_state = cState;
-
 		if (waitTime < BackOnTime) {
 			return ButtonEvent::StateBack;
 		}

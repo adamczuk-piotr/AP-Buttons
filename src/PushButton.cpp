@@ -1,4 +1,4 @@
-#include "PushButton.h"
+#include <PushButton.h>
 #include <Arduino.h>
 
 uint16_t 	PushButton::ClickMinTime = 50;
@@ -20,56 +20,55 @@ ButtonEvent PushButton::getEvent() {
     unsigned long cTime = millis();	//Current time
 	unsigned long waitTime = (cTime - _lastChanged);//Calculate wait time
 	ButtonEvent event = ButtonEvent::None;
-	
-		if (_lastState != cState) {	               			
-			if (HIGH == cState) {
-				if (waitTime > ClickMinTime && ( waitTime  < ClickMaxTime)) {
 
-					if (_clicked && cTime - _lastClick < DoubleClickWaitTime) {//Check for double click 
-						event = ButtonEvent::DoubleClicked;
-						_clicked = false;
-					}
-					else {
-						if (nullptr == _onDoubleClick) {
-							event = ButtonEvent::Clicked; //Return Click event immediatelly if no double click is registered
-						}
-						else {
-							_clicked = true; //store click event and time
-							_lastClick = cTime;	
-						}
+	if (_lastState != cState) {	               			
+		if (HIGH == cState) {
+			if (waitTime > ClickMinTime && ( waitTime  < ClickMaxTime)) {
 
-					}
-				}
-				else if (_pressed) {
-					event = ButtonEvent::Pressed;
-				}
-			}
-			else {//Go to LOW, reset pressed
-				_pressed = false;
-			}
-			_lastChanged = cTime;
-			_lastState = cState;
-		}
-		else {
-			if (LOW == cState) {	
-				if (waitTime > HoldMinTime) {
-					_pressed = false;//reset press event
-					event = ButtonEvent::Hold;	
-				}	
-				else if ( !_pressed && waitTime >= PressMinTime ) {
-				   //Set press event once
-				   _pressed = true;
-				}
-			}
-			else {
-				if (_clicked &&  ((cTime - _lastClick ) >=  DoubleClickWaitTime) ) {
-					event = ButtonEvent::Clicked;
+				if (_clicked && cTime - _lastClick < DoubleClickWaitTime) {//Check for double click 
+					event = ButtonEvent::DoubleClicked;
 					_clicked = false;
 				}
+				else {
+					if (nullptr == _onDoubleClick) {
+						event = ButtonEvent::Clicked; //Return Click event immediatelly if no double click is registered
+					}
+					else {
+						_clicked = true; //store click event and time
+						_lastClick = cTime;	
+					}
+				}
+			}
+			else if (_pressed) {
+				event = ButtonEvent::Pressed;
 			}
 		}
-		
-		return event;
+		else {//Go to LOW, reset pressed
+			_pressed = false;
+		}
+		_lastChanged = cTime;
+		_lastState = cState;
+	}
+	else {
+		if (LOW == cState) {	
+			if (waitTime > HoldMinTime) {
+				_pressed = false;//reset press event
+				event = ButtonEvent::Hold;	
+			}	
+			else if ( !_pressed && waitTime >= PressMinTime ) {
+				//Set press event once
+				_pressed = true;
+			}
+		}
+		else {
+			if (_clicked &&  ((cTime - _lastClick ) >=  DoubleClickWaitTime) ) {
+				event = ButtonEvent::Clicked;
+				_clicked = false;
+			}
+		}
+	}
+	
+	return event;
 };
 
 void PushButton::update() {
