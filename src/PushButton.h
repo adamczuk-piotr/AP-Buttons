@@ -4,10 +4,7 @@
 #include <Button.h>
 
 class PushButton : public Button {
-	private:
-		uint8_t _pin;
-		
-		bool _lastState;
+	private:		
 		bool _clicked;
 		bool _pressed;
 		unsigned long _lastChanged;
@@ -17,9 +14,13 @@ class PushButton : public Button {
 		ButtonEventCallback _onDoubleClick = nullptr;
 		ButtonEventCallback _onPress = nullptr;
 		ButtonEventCallback _onHold = nullptr;
+		
 
-	protected:
 		ButtonEvent getEvent();
+	protected:
+		PushButton(uint8_t pin) : Button(pin),  _clicked(false), _pressed(false), _lastChanged(0), _lastClick(0) {};
+		bool _lastActive;
+		virtual bool isActive() = 0;
 
 	public:
 		static  uint16_t	ClickMinTime;
@@ -28,10 +29,7 @@ class PushButton : public Button {
 		static  uint16_t 	PressMinTime;		
 		static  uint16_t 	HoldMinTime;
 		
-		PushButton(uint8_t pin) : Button(), _pin(pin), _clicked(false), _pressed(false), _lastChanged(0), _lastClick(0) {};
-		~PushButton() {};
-
-		void  begin();
+		virtual ~PushButton() {};
 
 		void onClick(ButtonEventCallback event) {
 			_onClick = event;
@@ -49,7 +47,7 @@ class PushButton : public Button {
 			_onHold = event;
 		};
 
-		void update();
+		virtual void update();
 };
 
 #endif

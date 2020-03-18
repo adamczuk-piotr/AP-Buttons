@@ -5,7 +5,6 @@
 
 class ToggleButton : public Button {
 	private:
-		uint8_t _pin;
 		bool _state;
 		unsigned long 	_changeTime;
 		unsigned long 	_prevChangeTime;
@@ -20,7 +19,7 @@ class ToggleButton : public Button {
 		static  uint16_t ChangeTime;
 		static  uint16_t BackOnTime;		
 		
-		ToggleButton(uint8_t pin) : _pin(pin), _changeTime(0), _prevChangeTime(0){
+		ToggleButton(uint8_t pin) : Button(pin), _changeTime(0), _prevChangeTime(0){
 			_state = digitalRead(_pin);
 		};
 

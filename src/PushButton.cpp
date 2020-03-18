@@ -7,22 +7,17 @@ uint16_t 	PushButton::DoubleClickWaitTime = 220;
 uint16_t 	PushButton::PressMinTime = 400;		
 uint16_t 	PushButton::HoldMinTime = 800;
 
-void PushButton::begin() {
-	pinMode(_pin, INPUT_PULLUP);
-	//Set state to HIGH to turn off on sturtup
-	_lastState = HIGH;
-
-};
 
 ButtonEvent PushButton::getEvent() {
-	bool cState = digitalRead(_pin); //Read current state
+
+	bool active = isActive(); //Read current state
 
     unsigned long cTime = millis();	//Current time
 	unsigned long waitTime = (cTime - _lastChanged);//Calculate wait time
 	ButtonEvent event = ButtonEvent::None;
 
-	if (_lastState != cState) {	               			
-		if (HIGH == cState) {
+	if (_lastActive != active) {	               			
+		if (! active) {
 			if (waitTime > ClickMinTime && ( waitTime  < ClickMaxTime)) {
 
 				if (_clicked && cTime - _lastClick < DoubleClickWaitTime) {//Check for double click 
@@ -47,10 +42,10 @@ ButtonEvent PushButton::getEvent() {
 			_pressed = false;
 		}
 		_lastChanged = cTime;
-		_lastState = cState;
+		_lastActive = active;
 	}
 	else {
-		if (LOW == cState) {	
+		if ( active) {	
 			if (waitTime > HoldMinTime) {
 				_pressed = false;//reset press event
 				event = ButtonEvent::Hold;	

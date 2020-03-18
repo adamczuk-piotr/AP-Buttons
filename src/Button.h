@@ -16,8 +16,9 @@ class Button {
 		virtual ~Button();
 		virtual void begin() = 0;	
 		virtual void update() = 0;
-	
+		Button(uint8_t pin) : _pin(pin) {};
 	protected:
+		uint8_t _pin;
 		virtual ButtonEvent getEvent() = 0;
 
 };
