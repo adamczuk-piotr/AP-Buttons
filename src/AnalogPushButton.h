@@ -5,15 +5,14 @@
 
 class AnalogPushButton : public PushButton {
 	private:
-		uint8_t _minPercent = 0;
-		uint8_t _maxPercent = 10;
+		uint8_t _minPercent;
+		uint8_t _maxPercent;
 	protected:
 		bool isActive();
 	public:
-		AnalogPushButton(uint8_t pin) : PushButton(pin) {};
+		AnalogPushButton(uint8_t pin, uint8_t minPercent = 0, uint8_t maxPercent = 100) : PushButton(pin), _minPercent(minPercent), _maxPercent(maxPercent) {};
 		virtual ~AnalogPushButton() {};
-		void begin();
-		void begin(uint8_t minPercent, uint8_t maxPercent);
+		virtual void begin();
 
 };
 

@@ -25,7 +25,6 @@ class ToggleButton : public Button {
 
 		~ToggleButton() {};
 
-		void begin() override;
 
 		void onChange(ButtonEventCallback event) {
 			_onChange = event;
@@ -34,8 +33,10 @@ class ToggleButton : public Button {
 		void onStateBack(ButtonEventCallback event) {
 			_onStateBack = event;
 		};
+		
+		virtual void begin() override;
 
-		void update() override;
+		virtual void update() override;
 };
 
 #endif
