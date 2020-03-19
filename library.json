@@ -1,6 +1,6 @@
 {
   "name": "AP-Buttons",
-  "keywords": "button,clck,tact,push,latch",
+  "keywords": "button,click,tact,push button,latch button, analog button",
   "description": "Library for common button types used with arduino and esp MCUs",
   "repository": {
     "type": "git",
