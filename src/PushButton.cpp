@@ -20,7 +20,7 @@ ButtonEvent PushButton::getEvent() {
 		if (! active) {
 			if (waitTime > ClickMinTime && ( waitTime  < ClickMaxTime)) {
 
-				if (_clicked && cTime - _lastClick < DoubleClickWaitTime) {//Check for double click 
+				if (_clicked && ((cTime - _lastClick) < DoubleClickWaitTime)) {//Check for double click 
 					event = ButtonEvent::DoubleClicked;
 					_clicked = false;
 				}
@@ -36,9 +36,10 @@ ButtonEvent PushButton::getEvent() {
 			}
 			else if (_pressed) {
 				event = ButtonEvent::Pressed;
+				_pressed = false; 
 			}
 		}
-		else {//Go to LOW, reset pressed
+		else {//Go to Active, reset pressed
 			_pressed = false;
 		}
 		_lastChanged = cTime;
@@ -48,7 +49,10 @@ ButtonEvent PushButton::getEvent() {
 		if ( active) {	
 			if (waitTime > HoldMinTime) {
 				_pressed = false;//reset press event
-				event = ButtonEvent::Hold;	
+				if ((cTime - _lastHold) >= _holdInterval) {
+					event = ButtonEvent::Hold;	
+					_lastHold = cTime;
+				}
 			}	
 			else if ( !_pressed && waitTime >= PressMinTime ) {
 				//Set press event once
@@ -68,29 +72,32 @@ ButtonEvent PushButton::getEvent() {
 
 void PushButton::update() {
 	const ButtonEvent  e = getEvent();
+	if (ButtonEvent::None == e) {
+		return;
+	} 
 
 	switch (e) {
-	case ButtonEvent::Clicked:
-		if (_onClick != nullptr) {
-			_onClick();
-		}
-		break;
-	case ButtonEvent::DoubleClicked:
-		if (_onDoubleClick != nullptr) {
-			_onDoubleClick();
-		}
-		break;
-	case ButtonEvent::Pressed:
-		if (_onPress != nullptr) {
-			_onPress();
-		}
-		break;
-	case ButtonEvent::Hold:
-		if (_onHold != nullptr) {
-			_onHold();
-		}
-		break;
-	default:
-		break;
+		case ButtonEvent::Clicked:
+			if (_onClick != nullptr) {
+				_onClick();
+			}
+			break;
+		case ButtonEvent::DoubleClicked:
+			if (_onDoubleClick != nullptr) {
+				_onDoubleClick();
+			}
+			break;
+		case ButtonEvent::Pressed:
+			if (_onPress != nullptr) {
+				_onPress();
+			}
+			break;
+		case ButtonEvent::Hold:
+			if (_onHold != nullptr) {
+				_onHold();
+			}
+			break;
+		default:
+			break;
 	}
 };

@@ -5,23 +5,25 @@
 
 class PushButton : public Button {
 	private:		
-		bool _clicked;
-		bool _pressed;
-		unsigned long _lastChanged;
-		unsigned long _lastClick;
+		bool _clicked = false;
+		bool _pressed = false;
+		unsigned long _lastChanged = 0;
+		unsigned long _lastClick = 0;
+
+		uint16_t _holdInterval = 0;
+		unsigned long _lastHold = 0;
 
 		ButtonEventCallback _onClick = nullptr;
 		ButtonEventCallback _onDoubleClick = nullptr;
 		ButtonEventCallback _onPress = nullptr;
 		ButtonEventCallback _onHold = nullptr;
 		
-
 		ButtonEvent getEvent();
 	protected:
-		PushButton(uint8_t pin) : Button(pin),  _clicked(false), _pressed(false), _lastChanged(0), _lastClick(0) {};
+		PushButton(uint8_t pin) : Button(pin) {};
 		bool _lastActive;
 		virtual bool isActive() = 0;
-
+ 
 	public:
 		static  uint16_t	ClickMinTime;
 		static  uint16_t 	ClickMaxTime;
@@ -43,8 +45,9 @@ class PushButton : public Button {
 			_onPress = event;
 		};
 		
-		void onHold(ButtonEventCallback event) {
+		void onHold(ButtonEventCallback event, uint16_t interval = 0) {
 			_onHold = event;
+			_holdInterval = interval;
 		};
 
 		virtual void update();
