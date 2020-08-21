@@ -13,10 +13,11 @@ typedef enum Class {None, Clicked, Pressed, Hold, Changed, StateBack, DoubleClic
 
 class Button {
 	public:		
+		Button(uint8_t pin) : _pin(pin) {};
 		virtual ~Button();
 		virtual void begin() = 0;	
 		virtual void update() = 0;
-		Button(uint8_t pin) : _pin(pin) {};
+		virtual uint8_t pin() final {return _pin;};
 	protected:
 		uint8_t _pin;
 		virtual ButtonEvent getEvent() = 0;
