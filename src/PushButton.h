@@ -9,15 +9,21 @@ class PushButton : public Button {
 		bool _pressed = false;
 		unsigned long _lastChanged = 0;
 		unsigned long _lastClick = 0;
-
-		uint16_t _holdInterval = 0;
 		unsigned long _lastHold = 0;
+
 
 		ButtonEventCallback _onClick = nullptr;
 		ButtonEventCallback _onDoubleClick = nullptr;
 		ButtonEventCallback _onPress = nullptr;
 		ButtonEventCallback _onHold = nullptr;
 		
+		uint16_t 	_clickMinTime = 50;
+		uint16_t 	_clickMaxTime = 200;
+		uint16_t 	_doubleClickWaitTime = 220;
+		uint16_t 	_pressMinTime = 400;		
+		uint16_t 	_holdMinTime = 800;
+		uint16_t 	_holdInterval = 0;
+
 		ButtonEvent getEvent();
 	protected:
 		PushButton(uint8_t pin) : Button(pin) {};
@@ -25,11 +31,7 @@ class PushButton : public Button {
 		virtual bool isActive() = 0;
  
 	public:
-		static  uint16_t	ClickMinTime;
-		static  uint16_t 	ClickMaxTime;
-		static  uint16_t 	DoubleClickWaitTime;
-		static  uint16_t 	PressMinTime;		
-		static  uint16_t 	HoldMinTime;
+
 		
 		virtual ~PushButton() {};
 

@@ -1,12 +1,6 @@
 #include <PushButton.h>
 #include <Arduino.h>
 
-uint16_t 	PushButton::ClickMinTime = 50;
-uint16_t 	PushButton::ClickMaxTime = 200;
-uint16_t 	PushButton::DoubleClickWaitTime = 220;
-uint16_t 	PushButton::PressMinTime = 400;		
-uint16_t 	PushButton::HoldMinTime = 800;
-
 
 ButtonEvent PushButton::getEvent() {
 
@@ -18,9 +12,9 @@ ButtonEvent PushButton::getEvent() {
 
 	if (_lastActive != active) {	               			
 		if (! active) {
-			if (waitTime > ClickMinTime && ( waitTime  < ClickMaxTime)) {
+			if (waitTime > _clickMinTime && ( waitTime  < _clickMaxTime)) {
 
-				if (_clicked && ((cTime - _lastClick) < DoubleClickWaitTime)) {//Check for double click 
+				if (_clicked && ((cTime - _lastClick) < _doubleClickWaitTime)) {//Check for double click 
 					event = ButtonEvent::DoubleClicked;
 					_clicked = false;
 				}
@@ -47,20 +41,20 @@ ButtonEvent PushButton::getEvent() {
 	}
 	else {
 		if ( active) {	
-			if (waitTime > HoldMinTime) {
+			if (waitTime > _holdMinTime) {
 				_pressed = false;//reset press event
 				if ((cTime - _lastHold) >= _holdInterval) {
 					event = ButtonEvent::Hold;	
 					_lastHold = cTime;
 				}
 			}	
-			else if ( !_pressed && waitTime >= PressMinTime ) {
+			else if ( !_pressed && waitTime >= _pressMinTime ) {
 				//Set press event once
 				_pressed = true;
 			}
 		}
 		else {
-			if (_clicked &&  ((cTime - _lastClick ) >=  DoubleClickWaitTime) ) {
+			if (_clicked &&  ((cTime - _lastClick ) >=  _doubleClickWaitTime) ) {
 				event = ButtonEvent::Clicked;
 				_clicked = false;
 			}
